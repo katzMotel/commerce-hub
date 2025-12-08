@@ -1,5 +1,7 @@
 // Base function to make GraphQL requests to Shopify
 
+import { Product } from "@/types/shopify";
+
 console.log('ENV CHECK:', {
     domain: process.env.SHOPIFY_STORE_DOMAIN,
     tokenExists: !!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN,
@@ -48,7 +50,7 @@ async function shopifyFetch<T>({
 }
 
 // Get all products
-export async function getProducts() {
+export async function getProducts(): Promise<Product[]> {
   const query = `
     query GetProducts($first: Int!) {
       products(first: $first) {
@@ -87,7 +89,7 @@ export async function getProducts() {
   const response = await shopifyFetch<{
     products: {
       edges: Array<{
-        node: any; 
+        node: Product; 
       }>;
     };
   }>({ query, variables });
