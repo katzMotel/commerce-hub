@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 import { fetchProducts } from '@/lib/redux/slices/productsSlice';
 import { Header } from '@/components/Header';
-import { Card } from '@/components/ui';
+import { ProductCard } from '@/components/products/ProductCard';
 export default function Home() {
   console.log('Home component rendering');
   const dispatch = useAppDispatch();
@@ -50,19 +50,7 @@ export default function Home() {
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {products.map((product) => (
-          <Card key={product.id} hover className="p-4">
-          <h2 className="text-xl font-semibold">{product.title}</h2>
-          <p className="text-gray-00 dark:text-gray-400 mt-2">
-            ${product.priceRange.minVariantPrice.amount} {product.priceRange.minVariantPrice.currencyCode}
-          </p>
-          {product.images.edges[0] && (
-            <img 
-              src={product.images.edges[0].node.url} 
-              alt={product.images.edges[0].node.altText || product.title}
-              className="mt-4 w-full h-48 object-cover rounded"
-            />
-          )}
-        </Card>
+          <ProductCard key={product.id} product={product}/>
         ))}
       </div>
     </main>
