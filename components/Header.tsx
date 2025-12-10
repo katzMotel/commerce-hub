@@ -5,6 +5,8 @@ import { useAppSelector } from '@/lib/redux/hooks';
 import { ShoppingCart } from 'lucide-react';  // Import Lucide icon
 import { useState } from 'react';
 import { CartDrawer } from './cart/CartDrawer';
+import Image from 'next/image';
+import Link from 'next/link';
 export function Header() {
   const { items } = useAppSelector((state) => state.cart);
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
@@ -12,8 +14,16 @@ export function Header() {
   return (
     <>
     <header className="flex justify-between items-center mb-8">
-      <h1 className="text-4xl font-bold">Basecamp Supply</h1>
-      
+      <Link href="/" className="flex items-center">
+      <Image
+        src="/store-logo-v2.png"
+        alt="Basecamp Supply"
+        width={180}
+        height={50}
+        priority
+        className="h-24 w-auto rounded-lg transition-all hover:scale-105 hover:drop-shadow-lg"
+      />
+    </Link>
       <div className="flex items-center gap-4">
         {/* Cart Button */}
         <button 

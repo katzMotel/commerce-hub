@@ -2,14 +2,17 @@
 
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
-import { fetchProducts } from '@/lib/redux/slices/productsSlice';
+import { fetchProducts, selectFilteredProducts } from '@/lib/redux/slices/productsSlice';
 import { Header } from '@/components/Header';
+import { SearchBar } from '@/components/products/SearchBar';
+import { FilterControls } from '@/components/products/FilterControls';
 import { ProductCard } from '@/components/products/ProductCard';
 import { ProductCardSkeleton } from '@/components/products/ProductCardSkeleton';
 
 export default function Home() {
   const dispatch = useAppDispatch();
-  const { items: products, loading, error } = useAppSelector((state) => state.products);
+  const { loading, error } = useAppSelector((state) => state.products);
+  const filteredProducts = useAppSelector(selectFilteredProducts);  // Use selector
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -19,6 +22,12 @@ export default function Home() {
     <main className="min-h-screen p-8">
       <Header />
       
+      {/* Search and Filters */}
+      <div className="mb-8 space-y-4">
+        <SearchBar />
+        <FilterControls />
+      </div>
+
       {/* Loading State */}
       {loading && (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -45,19 +54,22 @@ export default function Home() {
       )}
 
       {/* Products Grid */}
-      {!loading && !error && products.length > 0 && (
+      {!loading && !error && filteredProducts.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       )}
 
-      {/* Empty State */}
-      {!loading && !error && products.length === 0 && (
+      {/* Empty State - No Results */}
+      {!loading && !error && filteredProducts.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-600 dark:text-gray-400 text-lg">
+          <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">
             No products found
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-500">
+            Try adjusting your filters or search query
           </p>
         </div>
       )}
