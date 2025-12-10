@@ -3,18 +3,21 @@
 import { ThemeToggle } from './ui';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { ShoppingCart } from 'lucide-react';  // Import Lucide icon
-
+import { useState } from 'react';
+import { CartDrawer } from './cart/CartDrawer';
 export function Header() {
   const { items } = useAppSelector((state) => state.cart);
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
-
+  const [isCartOpen, setIsCartOpen] = useState(false);
   return (
+    <>
     <header className="flex justify-between items-center mb-8">
       <h1 className="text-4xl font-bold">CommerceHub</h1>
       
       <div className="flex items-center gap-4">
         {/* Cart Button */}
         <button 
+          onClick={() => setIsCartOpen(true)}
           className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
           aria-label="Shopping cart"
         >
@@ -32,5 +35,7 @@ export function Header() {
         <ThemeToggle />
       </div>
     </header>
+    <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)}/>
+    </>
   );
 }
