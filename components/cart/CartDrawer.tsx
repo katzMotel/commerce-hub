@@ -5,6 +5,7 @@ import { removeFromCart, updateQuantity, clearCart } from '@/lib/redux/slices/ca
 import { Button } from '@/components/ui';
 import { X, Plus, Minus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useState } from 'react';
 interface CartDrawerProps {
   isOpen: boolean;
   onClose: () => void;
@@ -13,7 +14,26 @@ interface CartDrawerProps {
 export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const dispatch = useAppDispatch();
   const { items, total } = useAppSelector((state) => state.cart);
-
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const handleCheckout = async () => {
+    setIsCheckingOut(true);
+    try{
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify({items}),
+      });
+      const data = await response.json();
+      if(!response.ok){
+        throw new Error(data.error || 'Failed to create checkout session');
+      }
+      window.location.href = data.url;
+    } catch(error){
+      console.error('Checkout error:', error);
+      toast.error('Failed to start checkout.  Please try again.');
+      setIsCheckingOut(false);
+    }
+  };
   return (
     <>
       {/* Backdrop */}
@@ -135,8 +155,13 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             </div>
 
             {/* Checkout Button */}
-            <Button variant="primary" size="lg" className="w-full">
-              Checkout
+            <Button 
+            variant="primary" 
+            size="lg" 
+            className="w-full"
+            onClick={handleCheckout}
+            disabled={isCheckingOut}>
+              {isCheckingOut ? 'Processing...' : 'Checkout'}
             </Button>
 
             {/* Clear Cart */}

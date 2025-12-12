@@ -26,7 +26,7 @@ export function Header() {
   return (
     <>
     <header className={`
-              sticky top-0 z-50
+              sticky top-0 z-30
               flex justify-center items-center relative
               p-4
               bg-white dark:bg-[#0a0a0a]
