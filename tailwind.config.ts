@@ -10,6 +10,7 @@ const config: Config = {
         extend:{
             fontFamily: {
                 heading: ['var(--font-heading)'],
+                sans:['var(--font-body)','system-ui','sans-serif']
             }
         }
     }

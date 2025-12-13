@@ -3,13 +3,20 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { StoreProvider } from "@/lib/redux/StoreProvider";
 import { Toaster } from "sonner";
-import { Bebas_Neue} from 'next/font/google';
+import { Bebas_Neue, Open_Sans } from 'next/font/google';
 
-const bebas_neue = Bebas_Neue({ 
+const bebasNeue = Bebas_Neue({ 
   subsets: ['latin'],
-  weight: '400', // Bold weights for headings
-  variable: '--font-heading',
+  weight: ['400'],
+  variable: '--font-heading',  // Changed: removed --
 });
+
+const openSans = Open_Sans({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-body',  // Changed: removed --
+});
+
 export const metadata: Metadata = {
   title: "Basecamp Supply",
   description: "Premium outdoor gear and equipment for your next adventure",
@@ -21,18 +28,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={bebas_neue.variable}>
+    <html lang="en" suppressHydrationWarning className={`${bebasNeue.variable} ${openSans.variable}`}>
       <body>
-      <StoreProvider>
-        <ThemeProvider 
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster position="top-right" richColors />
-        </ThemeProvider>
+        <StoreProvider>
+          <ThemeProvider 
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster position="top-right" richColors />
+          </ThemeProvider>
         </StoreProvider>
       </body>
     </html>

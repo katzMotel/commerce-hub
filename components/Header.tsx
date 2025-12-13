@@ -34,6 +34,11 @@ export function Header() {
               transition-transform duration-300 ease-in-out
               ${scrollDirection === 'down'? '-translate-y-full' : 'translate-y-0'}
       `}>
+  {/* About Link*/}
+  <Link href='/about' className="absolute left-4 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
+  >
+    About Us
+  </Link>
   {/* Logo - centered */}
   <Link href="/" className="flex items-center">
     <Image
@@ -47,7 +52,7 @@ export function Header() {
   </Link>
   
   {/* Cart & Theme - absolute positioned to right */}
-  <div className="absolute right-0 flex items-center gap-4">
+  <div className="absolute right-4 flex items-center gap-4">
     {/* Cart Button */}
     <button 
       onClick={() => setIsCartOpen(true)}

@@ -2,10 +2,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button, Card } from '@/components/ui';
 import { Mountain, Shield, Users } from 'lucide-react';
-
+import { Header } from '@/components/Header';
 export default function AboutPage() {
   return (
     <main className="min-h-screen relative z-10">
+        <Header />
       {/* Hero Section */}
       <section className="h-[40vh] bg-gradient-to-br from-green-900 to-green-700 flex items-center justify-center">
         <div className="text-center text-white px-4">
