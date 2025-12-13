@@ -1,8 +1,8 @@
 'use client';
-
+import { useSession, signOut } from 'next-auth/react';
 import { ThemeToggle } from './ui';
 import { useAppSelector } from '@/lib/redux/hooks';
-import { ShoppingCart } from 'lucide-react';  // Import Lucide icon
+import { ShoppingCart, User, LogOut } from 'lucide-react';  // Import Lucide icon
 import { useState, useEffect } from 'react';
 import { CartDrawer } from './cart/CartDrawer';
 import Image from 'next/image';
@@ -67,11 +67,81 @@ export function Header() {
         </span>
       )}
     </button>
-    
+    <UserMenu />
     <ThemeToggle />
   </div>
 </header>
     <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)}/>
     </>
+  );
+}
+function UserMenu() {
+  const { data: session, status } = useSession();
+  const [showMenu, setShowMenu] = useState(false);
+
+  if (status === 'loading') {
+    return (
+      <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
+    );
+  }
+
+  if (!session) {
+    return (
+      <Link
+        href="/auth/signin"
+        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+      >
+        <User className="w-5 h-5" />
+        Sign In
+      </Link>
+    );
+  }
+
+  return (
+    <div className="relative">
+      {/* User Button */}
+      <button
+        onClick={() => setShowMenu(!showMenu)}
+        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+      >
+        <div className="w-8 h-8 rounded-full bg-green-700 dark:bg-green-600 flex items-center justify-center text-white font-medium">
+          {session.user?.name?.[0]?.toUpperCase() || session.user?.email?.[0]?.toUpperCase()}
+        </div>
+        <span className="hidden md:block text-sm font-medium">
+          {session.user?.name || session.user?.email}
+        </span>
+      </button>
+
+      {/* Dropdown Menu */}
+      {showMenu && (
+        <>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 z-40" 
+            onClick={() => setShowMenu(false)}
+          />
+          
+          {/* Menu */}
+          <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50">
+            <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+              <p className="text-sm font-medium text-gray-900 dark:text-white">
+                {session.user?.name}
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                {session.user?.email}
+              </p>
+            </div>
+            
+            <button
+              onClick={() => signOut({ callbackUrl: '/' })}
+              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </button>
+          </div>
+        </>
+      )}
+    </div>
   );
 }

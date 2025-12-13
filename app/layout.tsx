@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { StoreProvider } from "@/lib/redux/StoreProvider";
+import { SessionProvider } from "next-auth/react";
+import { Providers } from "@/components/Providers";
 import { Toaster } from "sonner";
 import { Bebas_Neue, Open_Sans } from 'next/font/google';
 import { Footer } from "@/components/Footer";
@@ -30,18 +32,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${bebasNeue.variable} ${openSans.variable}`}>
       <body>
-        <StoreProvider>
-          <ThemeProvider 
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
+       <Providers>
             {children}
             <Footer />
             <Toaster position="top-right" richColors />
-          </ThemeProvider>
-        </StoreProvider>
+        </Providers>
       </body>
     </html>
   );
